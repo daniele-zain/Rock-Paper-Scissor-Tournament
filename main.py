@@ -1,6 +1,8 @@
 import pygame
 import random
 
+from pygame import mixer
+
 pygame.init()
 
 screen = pygame.display.set_mode((800,600))
@@ -8,6 +10,10 @@ screen = pygame.display.set_mode((800,600))
 RockImg = pygame.image.load('png\\rock.png')
 PaperImg = pygame.image.load('png\scroll.png')
 ScissorImg = pygame.image.load('png\scissors.png')
+
+RockSound = mixer.Sound("Sound effects\stone-dropping-6843.mp3")
+ScissorSound = mixer.Sound("Sound effects\scissors-cutting-paper-1-101193.mp3")
+PaperSound = mixer.Sound("Sound effects\paper-rustle-81855.mp3")
 
 
 object_width = 15
@@ -80,20 +86,20 @@ num = 30
 
 for x in range(num):
     RockX = random.randrange(0,250)
-    RockY = random.randrange(250,350)
+    RockY = random.randrange(0,200)
 
     PaperX = random.randrange(250,500)
-    PaperY = random.randrange(250,350)
+    PaperY = random.randrange(400,550)
 
     ScissorX = random.randrange(500,750)
-    ScissorY = random.randrange(250,350)
+    ScissorY = random.randrange(0,200)
 
-    rock_velocityX = random.choice([-1, 1]) * random.uniform(0.01, 0.2)
-    rock_velocityY = random.choice([-1, 1]) * random.uniform(0.01, 0.2)
-    paper_velocityX = random.choice([-1, 1]) * random.uniform(0.01, 0.2)
-    paper_velocityY = random.choice([-1, 1]) * random.uniform(0.01, 0.2)
-    scissor_velocityX = random.choice([-1, 1]) * random.uniform(0.01, 0.2)
-    scissor_velocityY = random.choice([-1, 1]) * random.uniform(0.01, 0.2)
+    rock_velocityX = random.choice([-1, 1]) * random.uniform(0.01, 0.1)
+    rock_velocityY = random.choice([-1, 1]) * random.uniform(0.01, 0.1)
+    paper_velocityX = random.choice([-1, 1]) * random.uniform(0.01, 0.1)
+    paper_velocityY = random.choice([-1, 1]) * random.uniform(0.01, 0.1)
+    scissor_velocityX = random.choice([-1, 1]) * random.uniform(0.01, 0.1)
+    scissor_velocityY = random.choice([-1, 1]) * random.uniform(0.01, 0.1)
 
     rocks.append(Rock(RockImg, RockX, RockY, rock_velocityX, rock_velocityY))
     papers.append(Paper(PaperImg, PaperX, PaperY, paper_velocityX, paper_velocityY))
@@ -133,18 +139,21 @@ while running:
         for scissor in scissors:
             if rock.rect.colliderect(scissor.rect):
                 scissors.remove(scissor)
+                RockSound.play()
                 rocks.append(Rock(RockImg, scissor.ScissorX, scissor.ScissorY, scissor.velocityX, scissor.velocityY))
 
     for paper in papers:
         for rock in rocks:
             if paper.rect.colliderect(rock.rect):
                 rocks.remove(rock)
+                PaperSound.play()
                 papers.append(Paper(PaperImg, rock.RockX, rock.RockY, rock.velocityX, rock.velocityY))
 
     for scissor in scissors:
         for paper in papers:
             if scissor.rect.colliderect(paper.rect):
                 papers.remove(paper)
+                ScissorSound.play()
                 scissors.append(Scissor(ScissorImg, paper.PaperX, paper.PaperY, paper.velocityX, paper.velocityY))
 
 
